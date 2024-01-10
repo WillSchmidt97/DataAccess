@@ -7,8 +7,10 @@ class Program {
     static void Main(string[] args) {
         const string connectionString
         = "Server=localhost,1433;Database=baltaIO;User ID=sa;Password=1q2w3e4r@#$";
+        SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectionString);
+        builder.TrustServerCertificate = true;
 
-        using (SqlConnection connection = new SqlConnection(connectionString)) {
+        using (SqlConnection connection = new SqlConnection(builder.ConnectionString)) {
             //ListCategories(connection);
             // CreateCategory(connection);
             //CreateManyCategories(connection);
