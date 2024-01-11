@@ -15,7 +15,8 @@ class Program {
             // CreateCategory(connection);
             //CreateManyCategories(connection);
             // UpdateCategory(connection);
-            ExecuteProcedure(connection);
+            //ExecuteProcedure(connection);
+            ReadProcedure(connection);
         }
     }
 
@@ -131,4 +132,14 @@ class Program {
 
         Console.WriteLine($"{affectedRows} rows deleted");
     }
+
+    static void ReadProcedure(SqlConnection connection) {
+        var procedure = "[spGetCoursesByCategory]";
+        var pars = new { CategoryId = "09ce0b7b-cfca-497b-92c0-3290ad9d5142" };
+        var courses = connection.Query(procedure, pars, commandType: CommandType.StoredProcedure);
+
+        foreach (var course in courses){
+            Console.WriteLine($"{course.Id} - {course.Title}");
+        }
+    }  
 }
