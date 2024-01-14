@@ -16,7 +16,8 @@ class Program {
             //CreateManyCategories(connection);
             // UpdateCategory(connection);
             //ExecuteProcedure(connection);
-            ReadProcedure(connection);
+            //ReadProcedure(connection);
+            ExecuteScalar(connection);
         }
     }
 
@@ -142,4 +143,37 @@ class Program {
             Console.WriteLine($"{course.Id} - {course.Title}");
         }
     }  
+
+    static void ExecuteScalar(SqlConnection connection) {
+                var category = new Category();
+        category.Title = "Amazon AWS";
+        category.Url = "amazon";
+        category.Description = "Amazon AWS";
+        category.Order = 8;
+        category.Summary = "AWS Cloud";
+        category.Featured = false;
+
+        var insert = @"INSERT INTO
+            [Category]
+        OUTPUT inserted.[Id]
+        VALUES (
+            NEWID(),
+            @Title,
+            @Url,
+            @Summary,
+            @Order,
+            @Description,
+            @Featured)";
+        
+            var id = connection.ExecuteScalar<Guid>(insert, new{
+
+                    category.Title,
+                    category.Url,
+                    category.Summary,
+                    category.Order,
+                    category.Description,
+                    category.Featured
+            });
+            Console.WriteLine($"The inserted category was: {id}");
+    }
 }
