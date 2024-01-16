@@ -20,7 +20,8 @@ class Program {
             //ReadProcedure(connection);
             //ExecuteScalar(connection);
             //ReadView(connection);
-            OneToOne(connection);
+            //OneToOne(connection);
+            OneToMany(connection);
         }
     }
 
@@ -202,10 +203,38 @@ class Program {
             (careerItem, course) => {
                 careerItem.Course = course;
                 return careerItem;
-            }, splitOn: "[Id]");
+            }, splitOn: "Id");
 
         foreach (var item in items) {
             Console.WriteLine($"{item.Id} - {item.Title} - {item.Course.Title}");
+        }
+    }
+
+    static void OneToMany(SqlConnection connection) {
+        var sql = @"
+            SELECT 
+                [Career].[Id],
+                [Career].[Title],
+                [CareerItem].[CareerId],
+                [CareerItem].[Title]
+            FROM
+                [Career]
+            INNER JOIN
+                [CareerItem] ON [CareerItem].[CareerId] = [Career].[Id]
+            ORDER BY    
+                [Career].[Title]";
+
+        var items = connection.Query<Career, CareerItem, Career>(
+            sql,
+            (career, careerItem) => {
+                return career;
+            }, splitOn: "CareerId");
+
+        foreach (var item in items) {
+            Console.WriteLine($"{item.Title}");
+            foreach (var careerItem in item.CareerItems) {
+                Console.WriteLine($" - {careerItem.Title}");
+            }
         }
     }
 }
