@@ -12,16 +12,17 @@ class Program {
         builder.TrustServerCertificate = true;
 
         using (SqlConnection connection = new SqlConnection(builder.ConnectionString)) {
-            //ListCategories(connection);
+            // ListCategories(connection);
             // CreateCategory(connection);
-            //CreateManyCategories(connection);
+            // CreateManyCategories(connection);
             // UpdateCategory(connection);
-            //ExecuteProcedure(connection);
-            //ReadProcedure(connection);
-            //ExecuteScalar(connection);
-            //ReadView(connection);
-            //OneToOne(connection);
-            OneToMany(connection);
+            // ExecuteProcedure(connection);
+            // ReadProcedure(connection);
+            // ExecuteScalar(connection);
+            // ReadView(connection);
+            // OneToOne(connection);
+            // OneToMany(connection);
+            QueryMultiple(connection);
         }
     }
 
@@ -244,6 +245,23 @@ class Program {
             Console.WriteLine($"{item.Title}");
             foreach (var careerItem in item.CareerItems) {
                 Console.WriteLine($" - {careerItem.Title}");
+            }
+        }
+    }
+
+    static void QueryMultiple(SqlConnection connection) {
+        var query = "SELECT * FROM [Category]; SELECT * FROM [Course]";
+
+        using (var multi = connection.QueryMultiple(query)) {
+            var categories = multi.Read<Category>();
+            var courses = multi.Read<Course>();
+
+            foreach(var category in categories) {
+                Console.WriteLine($"{category.Title}");
+            }
+
+            foreach(var course in courses) {
+                Console.WriteLine($"{course.Title}");
             }
         }
     }
