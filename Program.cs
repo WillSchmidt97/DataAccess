@@ -224,9 +224,19 @@ class Program {
             ORDER BY    
                 [Career].[Title]";
 
+        var careers = new List<Career>();
         var items = connection.Query<Career, CareerItem, Career>(
             sql,
-            (career, careerItem) => {
+            (career, item) => {
+                var c = careers.Where(c => c.Id == career.Id).FirstOrDefault();
+                if (c == null) {
+                    c = career;
+                    c.CareerItems.Add(item);
+                    careers.Add(c);
+                }
+                else {
+                    c.CareerItems.Add(item);
+                }
                 return career;
             }, splitOn: "CareerId");
 
