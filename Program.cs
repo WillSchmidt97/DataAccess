@@ -22,7 +22,9 @@ class Program {
             // ReadView(connection);
             // OneToOne(connection);
             // OneToMany(connection);
-            QueryMultiple(connection);
+            // QueryMultiple(connection);
+            // SelectIn(connection);
+            Like(connection, "backend");
         }
     }
 
@@ -278,5 +280,56 @@ class Program {
         foreach (var item in items) {
             Console.WriteLine($"{item.Title}");
         }
+    }
+
+    static void Like(SqlConnection connection, string exp) {
+        var query = @"SELECT * FROM [Course] WHERE [Title] LIKE @expression";
+
+        var items = connection.Query<Course>(query, new {
+                    expression = $"%{exp}%"
+                });
+        foreach (var item in items) {
+            Console.WriteLine($"{item.Title}");
+        }
+    }
+
+    static void Transaction(SqlConnection connection) {
+        var category = new Category();
+        category.Id = Guid.NewGuid();
+        category.Title = "Don't wanna save it";
+        category.Url = "amazon";
+        category.Description = "Amazon AWS";
+        category.Order = 8;
+        category.Summary = "AWS Cloud";
+        category.Featured = false;
+
+        var insert = @"INSERT INTO
+        [Category]
+        VALUES (
+            @Id,
+            @Title,
+            @Url,
+            @Summary,
+            @Order,
+            @Description,
+            @Featured)";
+        
+            using(var transaction = connection.BeginTransaction()) {
+                var rows = connection.Execute(insert, new{
+
+                    category.Id,
+                    category.Title,
+                    category.Url,
+                    category.Summary,
+                    category.Order,
+                    category.Description,
+                    category.Featured
+                }, transaction);
+
+                //transaction.Commit();
+                transaction.Rollback();
+
+                Console.WriteLine($"{rows} rows inserted");
+            }
     }
 }
