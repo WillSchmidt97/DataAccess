@@ -10,7 +10,7 @@ namespace Blog
         private const string ConnectionString = @"Server=localhost,1433;Database=Blog;User ID=sa;Password=1q2w3e4r@#$";
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            ReadUsers();
         }
 
         public static void ReadUsers()
