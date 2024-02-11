@@ -1,5 +1,6 @@
 ﻿using System;
 using Blog.Models;
+using Blog.Repositories;
 using Dapper.Contrib.Extensions;
 using Microsoft.Data.SqlClient;
 
@@ -7,20 +8,23 @@ namespace Blog
 {
     class Program
     {
-        private const string ConnectionString = @"Server=localhost,1433;Database=Blog;User ID=sa;Password=1q2w3e4r@#$";
+        private const string ConnectionString = @"Server=localhost,1433;Database=Blog;User ID=sa;Password=1q2w3e4r@#$;TrustServerCertificate=true";
         static void Main(string[] args)
         {
-            ReadUsers();
+           // ReadUsers();
+           // CreateUser();
+           // UpdateUser();
+           // DeleteUser();
         }
 
         public static void ReadUsers()
         {
-            using(var connection = new SqlConnection(ConnectionString)) {
-                var users = connection.GetAll<User>();
+            var repository = new UserRepository();
+            var users = repository.GetAll();
 
-                foreach(var user in users) {
-                    Console.WriteLine(user.Name);
-                }
+            foreach(var user in users) 
+            {
+                Console.WriteLine(user.Name);
             }
         }
         public static void ReadUser()
@@ -34,7 +38,7 @@ namespace Blog
         {
             var user = new User() {
                 Bio = "I'm a software developer",
-                Email = "bill.schmidt20@gmail.com",
+                Email = "willschmidt1997@gmail.com",
                 Image = "https://www.google.com",
                 Name = "Bill Schmidt",
                 PasswordHash = "HASH",
@@ -50,11 +54,11 @@ namespace Blog
         public static void UpdateUser()
         {
             var user = new User() {
-                Id = 2,
+                Id = 3,
                 Bio = "I'm a backend developer",
-                Email = "bill.schmidt20@gmail.com",
+                Email = "willschmidt1997@gmail.com",
                 Image = "https://www.google.com",
-                Name = "William Schmidt",
+                Name = "Will Schmidt",
                 PasswordHash = "HASH",
                 Slug = "will-schmidt"
             };
@@ -67,7 +71,7 @@ namespace Blog
         public static void DeleteUser()
         {
             using(var connection = new SqlConnection(ConnectionString)) {
-                var user = connection.Get<User>(2);
+                var user = connection.Get<User>(3);
                 connection.Delete<User>(user);
                 Console.WriteLine($"User {user.Name} has been deleted");
             }
