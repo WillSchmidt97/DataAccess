@@ -23,13 +23,11 @@ namespace Blog
             var users = repository.GetAll();
 
             foreach(var user in users) 
-            {
                 Console.WriteLine(user.Name);
-            }
         }
         public static void ReadUser()
         {
-            using(var connection = new SqlConnection(ConnectionString)) {
+            using(var connection = new SqlConnection()) {
                 var user = connection.Get<User>(1);
                 Console.WriteLine(user.Name);
             }
