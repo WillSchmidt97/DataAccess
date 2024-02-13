@@ -11,15 +11,18 @@ namespace Blog
         private const string ConnectionString = @"Server=localhost,1433;Database=Blog;User ID=sa;Password=1q2w3e4r@#$;TrustServerCertificate=true";
         static void Main(string[] args)
         {
+            var connection = new SqlConnection(ConnectionString);
+            connection.Open();
            // ReadUsers();
            // CreateUser();
            // UpdateUser();
            // DeleteUser();
+           connection.Close();
         }
 
-        public static void ReadUsers()
+        public static void ReadUsers(SqlConnection sqlConnection)
         {
-            var repository = new UserRepository();
+            var repository = new UserRepository(sqlConnection);
             var users = repository.GetAll();
 
             foreach(var user in users) 
