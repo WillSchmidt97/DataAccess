@@ -13,7 +13,8 @@ namespace Blog
         {
             var connection = new SqlConnection(ConnectionString);
             connection.Open();
-           // ReadUsers();
+           ReadUsers(connection);
+           ReadRoles(connection);
            // CreateUser();
            // UpdateUser();
            // DeleteUser();
@@ -28,54 +29,14 @@ namespace Blog
             foreach(var user in users) 
                 Console.WriteLine(user.Name);
         }
-        public static void ReadUser()
-        {
-            using(var connection = new SqlConnection()) {
-                var user = connection.Get<User>(1);
-                Console.WriteLine(user.Name);
-            }
-        }
-        public static void CreateUser()
-        {
-            var user = new User() {
-                Bio = "I'm a software developer",
-                Email = "willschmidt1997@gmail.com",
-                Image = "https://www.google.com",
-                Name = "Bill Schmidt",
-                PasswordHash = "HASH",
-                Slug = "bill-schmidt"
-            };
 
-            using(var connection = new SqlConnection(ConnectionString)) {
-                connection.Insert<User>(user);
-                Console.WriteLine($"User {user.Name} has been created");
-            }
-        }
-        
-        public static void UpdateUser()
+        public static void ReadRoles(SqlConnection sqlConnection)
         {
-            var user = new User() {
-                Id = 3,
-                Bio = "I'm a backend developer",
-                Email = "willschmidt1997@gmail.com",
-                Image = "https://www.google.com",
-                Name = "Will Schmidt",
-                PasswordHash = "HASH",
-                Slug = "will-schmidt"
-            };
+            var repository = new RoleRepository(sqlConnection);
+            var roles = repository.GetAll();
 
-            using(var connection = new SqlConnection(ConnectionString)) {
-                connection.Update<User>(user);
-                Console.WriteLine($"User {user.Name} has been updated");
-            }
-        }   
-        public static void DeleteUser()
-        {
-            using(var connection = new SqlConnection(ConnectionString)) {
-                var user = connection.Get<User>(3);
-                connection.Delete<User>(user);
-                Console.WriteLine($"User {user.Name} has been deleted");
-            }
-        }               
+            foreach(var role in roles) 
+                Console.WriteLine(role.Name);
+        }              
     }
 }	
