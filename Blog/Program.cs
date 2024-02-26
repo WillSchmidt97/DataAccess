@@ -13,12 +13,13 @@ namespace Blog
         {
             var connection = new SqlConnection(ConnectionString);
             connection.Open();
-           ReadUsers(connection);
-           ReadRoles(connection);
+            ReadUsers(connection);
+            ReadRoles(connection);
+            ReadTags(connection);
            // CreateUser();
            // UpdateUser();
            // DeleteUser();
-           connection.Close();
+            connection.Close();
         }
 
         public static void ReadUsers(SqlConnection sqlConnection)
@@ -28,15 +29,24 @@ namespace Blog
 
             foreach(var user in users) 
                 Console.WriteLine(user.Name);
-        }
+        }      
 
         public static void ReadRoles(SqlConnection sqlConnection)
         {
-            var repository = new RoleRepository(sqlConnection);
-            var roles = repository.GetAll();
+            var repository = new Repository<Role>(sqlConnection);
+            var items = repository.GetAll();
 
-            foreach(var role in roles) 
-                Console.WriteLine(role.Name);
-        }              
+            foreach(var item in items) 
+                Console.WriteLine(item.Name);
+        }
+
+        public static void ReadTags(SqlConnection sqlConnection)
+        {
+            var repository = new Repository<Tag>(sqlConnection);
+            var tags = repository.GetAll();
+
+            foreach(var tag in tags) 
+                Console.WriteLine(tag.Name);
+        }        
     }
 }	
