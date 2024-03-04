@@ -32,7 +32,11 @@ namespace Blog
             var users = repository.GetAll();
 
             foreach(var user in users) 
+            {
                 Console.WriteLine(user.Name);
+                foreach(var role in user.Roles)
+                    Console.WriteLine($"Role: {role.Name}");
+            }
         }
 
         public static void ReadUser(SqlConnection sqlConnection)
